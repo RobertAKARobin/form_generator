@@ -11,8 +11,13 @@ class Form{
 
 	oninit(){
 		const form = this
+		const search = location.search.substring(1);
+		const urlParams = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}')
 		m.request('./fields.json').then((response)=>{
 			form.fields = response
+			for(let param in urlParams){
+				$[param] = urlParams[param]
+			}
 		})
 	}
 
