@@ -83,8 +83,6 @@ class Form{
 			if(input.hasAttribute('multiple')){
 				const options = Array.from(input.querySelectorAll('option'))
 				value = options.filter(option => option.selected).map(option => option.value)
-			}else if(input.type == 'date'){
-				value = new Date(Date.parse(input.value))
 			}else{
 				value = input.value
 			}
