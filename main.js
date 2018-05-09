@@ -54,7 +54,14 @@ class Form{
 
 		function updateData(event){
 			const input = event.target
-			$[input.name] = input.value
+			let value
+			if(input.hasAttribute('multiple')){
+				const options = Array.from(input.querySelectorAll('option'))
+				value = options.filter(option => option.selected).map(option => option.value)
+			}else{
+				value = input.value
+			}
+			$[input.name] = value
 		}
 	}
 }
