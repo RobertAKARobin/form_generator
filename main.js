@@ -19,17 +19,30 @@ class Form{
 	view(){
 		const form = this
 		return form.fields.map((field)=>{
-			if(field.code) evalCode(field)
-			else return [
-				m('label.field', [
-					m('span.label', field.label),
-					m('span.input', evalField(field))
-				])
-			]
+			if(field.code){
+				evalCode(field.code)
+			}else{
+				let doShow = true
+				if(field.show_if){
+					doShow = !!(evalCode(field.show_if))
+				}
+				if(doShow){
+					return m('label.field', [
+						m('span.label', field.label),
+						m('span.input', evalField(field))
+					])
+				}
+			}
 		})
 
-		function evalCode(){
-
+		function evalCode(codeString){
+			codeString = codeString.replace('\\n', '\n')
+			try{
+				return eval(codeString)
+			}catch(error){
+				console.log(`${error.message}: ${codeString}`)
+				return false
+			}
 		}
 
 		function evalField(field){
@@ -43,6 +56,15 @@ class Form{
 						value: value
 					}, value)
 				}))
+			}else if(field.type == 'boolean'){
+				return m('select', {
+					name: field.field,
+					onchange: updateData
+				}, [
+					m('option', ' '),
+					m('option', {value: 'Yes'}, 'Yes'),
+					m('option', {value: 'No'}, 'No')
+				])
 			}else{
 				return m('input', {
 					type: field.type,
@@ -58,8 +80,8 @@ class Form{
 			if(input.hasAttribute('multiple')){
 				const options = Array.from(input.querySelectorAll('option'))
 				value = options.filter(option => option.selected).map(option => option.value)
-			}else if(input.type == 'checkbox'){
-				value = (input.checked ? true : false)
+			}else if(input.value == 'Yes' || input.value == 'No'){
+				value = (input.value == 'Yes' ? true : false)
 			}else if(input.type == 'date'){
 				value = new Date(Date.parse(input.value))
 			}else{
