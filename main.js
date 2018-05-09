@@ -58,7 +58,8 @@ class Form{
 					onchange: updateData
 				}, field.values.map((value)=>{
 					return m('option', {
-						value: value
+						value: value,
+						selected: ($[field.field] === value)
 					}, value)
 				}))
 			}else if(field.type == 'boolean'){
@@ -67,8 +68,14 @@ class Form{
 					onchange: updateData
 				}, [
 					m('option', ' '),
-					m('option', {value: 'Yes'}, 'Yes'),
-					m('option', {value: 'No'}, 'No')
+					m('option', {
+						value: 'Yes',
+						selected: ($[field.field] === 'Yes')
+					}, 'Yes'),
+					m('option', {
+						value: 'No',
+						selected: ($[field.field] === 'No')
+					}, 'No')
 				])
 			}else if(field.type == 'readonly'){
 				return m('span', $[field.field])
