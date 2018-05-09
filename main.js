@@ -18,9 +18,9 @@ class Form{
 		return form.fields.map((field)=>{
 			if(field.code) evalCode(field)
 			else return [
-				m('label', [
-					m('span', field.label),
-					evalField(field)
+				m('label.field', [
+					m('span.label', field.label),
+					m('span.input', evalField(field))
 				])
 			]
 		})
