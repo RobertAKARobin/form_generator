@@ -1,3 +1,7 @@
+// Form data
+const $ = {}
+
+// Form component
 class Form{
 
 	constructor(){
@@ -14,7 +18,6 @@ class Form{
 
 	view(){
 		const form = this
-		const $ = {}
 		return form.fields.map((field)=>{
 			if(field.code) evalCode(field)
 			else return [
@@ -32,8 +35,9 @@ class Form{
 		function evalField(field){
 			if(field.type == 'select' || field.type == 'multiselect'){
 				return m('select', {
-					name: field.name,
-					multiple: (field.type == 'multiselect' ? true : false)
+					name: field.field,
+					multiple: (field.type == 'multiselect' ? true : false),
+					onchange: updateData
 				}, field.values.map((value)=>{
 					return m('option', {
 						value: value
@@ -42,14 +46,20 @@ class Form{
 			}else{
 				return m('input', {
 					type: field.type,
-					name: field.name
+					name: field.field,
+					onchange: updateData
 				})
 			}
+		}
+
+		function updateData(event){
+			const input = event.target
+			$[input.name] = input.value
 		}
 	}
 }
 
 window.addEventListener('DOMContentLoaded', ()=>{
-	var form = new Form()
+	const form = new Form()
 	m.mount(document.getElementById('form'), form)
 })
