@@ -69,7 +69,8 @@ class Form{
 				return m('input', {
 					type: field.type,
 					name: field.field,
-					onchange: updateData
+					onchange: updateData,
+					value: ($[field.field] || '')
 				})
 			}
 		}
