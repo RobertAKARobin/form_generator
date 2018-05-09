@@ -65,6 +65,8 @@ class Form{
 					m('option', {value: 'Yes'}, 'Yes'),
 					m('option', {value: 'No'}, 'No')
 				])
+			}else if(field.type == 'readonly'){
+				return m('span', $[field.field])
 			}else{
 				return m('input', {
 					type: field.type,
