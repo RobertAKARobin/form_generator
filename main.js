@@ -14,7 +14,34 @@ class Form{
 
 	view(){
 		const form = this
-		return m('p', 'Hello, world!')
+		const $ = {}
+		return form.fields.map((field)=>{
+			if(field.code) evalCode(field)
+			else return [
+				m('label', [
+					m('span', field.label),
+					evalField(field)
+				])
+			]
+		})
+
+		function evalCode(){
+
+		}
+
+		function evalField(field){
+			switch(field.type){
+				case 'select':
+					return m('select', {
+						name: field.name
+					}, field.values.map((value)=>{
+						return m('option', {
+							value: value
+						}, value)
+					}))
+					break
+			}
+		}
 	}
 
 }
@@ -22,4 +49,4 @@ class Form{
 window.addEventListener('DOMContentLoaded', ()=>{
 	var form = new Form()
 	m.mount(document.getElementById('form'), form)
-});
+})
