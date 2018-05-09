@@ -30,20 +30,18 @@ class Form{
 		}
 
 		function evalField(field){
-			switch(field.type){
-				case 'select':
-					return m('select', {
-						name: field.name
-					}, field.values.map((value)=>{
-						return m('option', {
-							value: value
-						}, value)
-					}))
-					break
+			if(field.type == 'select' || field.type == 'multiselect'){
+				return m('select', {
+					name: field.name,
+					multiple: (field.type == 'multiselect' ? true : false)
+				}, field.values.map((value)=>{
+					return m('option', {
+						value: value
+					}, value)
+				}))
 			}
 		}
 	}
-
 }
 
 window.addEventListener('DOMContentLoaded', ()=>{
