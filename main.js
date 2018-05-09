@@ -60,6 +60,8 @@ class Form{
 				value = options.filter(option => option.selected).map(option => option.value)
 			}else if(input.type == 'checkbox'){
 				value = (input.checked ? true : false)
+			}else if(input.type == 'date'){
+				value = new Date(Date.parse(input.value))
 			}else{
 				value = input.value
 			}
