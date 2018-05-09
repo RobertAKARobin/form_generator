@@ -60,15 +60,18 @@ class Form{
 
 	view(){
 		const form = this
+		let doStop = false
 		return form.fields.map((field)=>{
-			if(field.code){
+			if(doStop && field.type != 'readonly' && !(field.code)){
+				return false
+			}else if(field.code){
 				evalCode(field.code)
 			}else{
-				let doShow = true
-				if(field.show_if){
-					doShow = !!(evalCode(field.show_if))
-				}
-				if(doShow){
+				if(!(field.show_if) || !!(evalCode(field.show_if))){
+					if(!($[field.field]) && field.type != 'readonly'){
+						console.log(field.label)
+						doStop = true
+					}
 					return m('label.field', [
 						m('span.label', field.label),
 						m('span.input', evalField(field))
@@ -93,12 +96,15 @@ class Form{
 					name: field.field,
 					multiple: (field.type == 'multiselect' ? true : false),
 					onchange: updateData
-				}, field.values.map((value)=>{
-					return m('option', {
-						value: value,
-						selected: ($[field.field] === value)
-					}, value)
-				}))
+				}, [
+					m('option', ' '),
+					field.values.map((value)=>{
+						return m('option', {
+							value: value,
+							selected: ($[field.field] === value)
+						}, value)
+					})
+				])
 			}else if(field.type == 'boolean'){
 				return m('select', {
 					name: field.field,
@@ -131,7 +137,7 @@ class Form{
 			let value
 			if(input.hasAttribute('multiple')){
 				const options = Array.from(input.querySelectorAll('option'))
-				value = options.filter(option => option.selected).map(option => option.value)
+				value = options.filter(option => (option.selected && option.value)).map(option => option.value)
 			}else{
 				value = input.value
 			}
