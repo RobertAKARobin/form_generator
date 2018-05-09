@@ -39,6 +39,11 @@ class Form{
 						value: value
 					}, value)
 				}))
+			}else{
+				return m('input', {
+					type: field.type,
+					name: field.name
+				})
 			}
 		}
 	}
