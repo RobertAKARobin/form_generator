@@ -43,10 +43,9 @@ class Form{
 
 	oninit(){
 		const form = this
-		const search = location.search.substring(1);
 		let urlParams = null
 		try{
-			urlParams = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}')
+			urlParams = JSON.parse('{"' + decodeURI(location.search.substring(1)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}')
 		}catch(error){
 			urlParams = {}
 		}
@@ -60,23 +59,30 @@ class Form{
 
 	view(){
 		const form = this
-		let doStop = false
+		let isLastFieldWithValue = false
 		return form.fields.map((field)=>{
-			if(doStop && field.type != 'readonly' && !(field.code)){
+			let doSkip = false
+			if(field.show_if && evalCode(field.show_if) == false){
+				doSkip = true
+			}else if(field.type == 'readonly'){
+				doSkip = false
+			}else if(isLastFieldWithValue){
+				doSkip = true
+			}
+
+			if(doSkip){
 				return false
 			}else if(field.code){
-				evalCode(field.code)
+				eval(field.code)
 			}else{
-				if(!(field.show_if) || !!(evalCode(field.show_if))){
-					if(!($[field.field]) && field.type != 'readonly'){
-						console.log(field.label)
-						doStop = true
-					}
-					return m('label.field', [
-						m('span.label', field.label),
-						m('span.input', evalField(field))
-					])
+				if($[field.field] === undefined && field.type != 'readonly'){
+					isLastFieldWithValue = true
+					console.log(field)
 				}
+				return m('label.field', [
+					m('span.label', field.label),
+					m('span.input', evalField(field))
+				])
 			}
 		})
 
@@ -134,14 +140,12 @@ class Form{
 
 		function updateData(event){
 			const input = event.target
-			let value
 			if(input.hasAttribute('multiple')){
 				const options = Array.from(input.querySelectorAll('option'))
-				value = options.filter(option => (option.selected && option.value)).map(option => option.value)
+				$[input.name] = options.filter(option => (option.selected && option.value)).map(option => option.value)
 			}else{
-				value = input.value
+				$[input.name] = input.value
 			}
-			$[input.name] = value
 		}
 	}
 }
