@@ -1,0 +1,39 @@
+<apex:page cache="false">
+    <head>
+        <title>Form Generator Proof-of-Concept</title>
+        <style>
+form{
+    display:table;
+    width:100%;
+}
+form .field{
+    display:table-row;
+}
+form .field:hover > *{
+    background-color:#eee;
+}
+form .label,
+form .input{
+    display:table-cell;
+    width:50%;
+    vertical-align:top;
+    padding:20px 0 5px 0;
+    border-bottom:1px solid #ccc;
+}
+label{
+    cursor:pointer;
+}
+select[multiple]{
+    width:100%;
+}
+        </style>
+        <apex:includeScript value="https://unpkg.com/mithril/mithril.min.js" />
+        <apex:includeScript value="{!$Resource.Form_Generator_Fields_JSON}" />
+        <apex:includeScript value="{!$Resource.Form_Generator_JS}" />
+    </head>
+    <body>
+        <h1>Form Generator Proof-of-Concept</h1>
+
+        <form id="form"></form>
+    </body>
+</apex:page>
