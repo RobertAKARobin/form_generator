@@ -12,7 +12,7 @@ class Form{
 		const form = this
 		let urlParams = null
 		try{
-			urlParams = JSON.parse('{"' + decodeURI(location.search.substring(1)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}')
+			urlParams = JSON.parse('{"' + decodeURI(location.search.substring(1)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"').replace(/\+/g, ' ') + '"}')
 		}catch(error){
 			urlParams = {}
 		}
