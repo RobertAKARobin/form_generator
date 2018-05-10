@@ -6,7 +6,6 @@ class Form{
 
 	constructor(){
 		const form = this
-		form.fields = []
 	}
 
 	oninit(){
@@ -17,18 +16,15 @@ class Form{
 		}catch(error){
 			urlParams = {}
 		}
-		m.request(fieldsJSONSource).then((response)=>{
-			form.fields = response
-			for(let param in urlParams){
-				$[param] = urlParams[param]
-			}
-		})
+		for(let param in urlParams){
+			$[param] = urlParams[param]
+		}
 	}
 
 	view(){
 		const form = this
 		let isLastFieldWithValue = false
-		return form.fields.map((field)=>{
+		return formFieldsJSON.map((field)=>{
 			let doSkip = false
 			if(field.show_if && evalCode(field.show_if) == false){
 				doSkip = true
