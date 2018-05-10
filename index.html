@@ -73,11 +73,10 @@ class Form{
 			if(doSkip){
 				return false
 			}else if(field.code){
-				eval(field.code)
+				evalCode(field.code)
 			}else{
 				if($[field.field] === undefined && field.type != 'readonly'){
 					isLastFieldWithValue = true
-					console.log(field)
 				}
 				return m('label.field', [
 					m('span.label', field.label),
