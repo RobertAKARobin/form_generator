@@ -10,13 +10,18 @@ class Form{
 
 	oninit(){
 		const form = this
-		let urlParams = null
+		form._loadURLParams()
+	}
+
+	_loadURLParams(){
+		let urlParams
+		let param
 		try{
 			urlParams = JSON.parse('{"' + decodeURIComponent(location.search.substring(1)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"').replace(/\+/g, ' ') + '"}')
 		}catch(error){
 			urlParams = {}
 		}
-		for(let param in urlParams){
+		for(param in urlParams){
 			$[param] = urlParams[param]
 		}
 	}
