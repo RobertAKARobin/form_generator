@@ -44,7 +44,8 @@ class Form{
 			}else if(field.code){
 				evalCode(field.code)
 			}else{
-				if($[field.field] === undefined && field.type != 'readonly'){
+				if($[field.name] === undefined && field.type != 'readonly'){
+					console.log()
 					isLastFieldWithValue = true
 				}
 				return m('label.field', [
@@ -65,44 +66,37 @@ class Form{
 		}
 
 		function evalField(field){
-			if(field.type == 'select' || field.type == 'multiselect'){
+			let {name, type, label = '', options = [], multiple = (type == 'multiselect')} = field
+			if(type == 'select' || type == 'multiselect'){
+				return viewAsSelect()
+			}else if(type == 'boolean'){
+				options = ['Yes', 'No']
+				return viewAsSelect()
+			}else if(type == 'readonly'){
+				return m('span', $[name])
+			}else{
+				return m('input', {
+					type,
+					name,
+					onchange: updateData,
+					value: ($[name] || '')
+				})
+			}
+
+			function viewAsSelect(input){
 				return m('select', {
-					name: field.field,
-					multiple: (field.type == 'multiselect' ? true : false),
+					name,
+					multiple,
 					onchange: updateData
 				}, [
 					m('option', ' '),
-					field.values.map((value)=>{
+					options.map(value=>{
 						return m('option', {
-							value: value,
-							selected: ($[field.field] === value)
+							value,
+							selected: ($[name] === value)
 						}, value)
 					})
 				])
-			}else if(field.type == 'boolean'){
-				return m('select', {
-					name: field.field,
-					onchange: updateData
-				}, [
-					m('option', ' '),
-					m('option', {
-						value: 'Yes',
-						selected: ($[field.field] === 'Yes')
-					}, 'Yes'),
-					m('option', {
-						value: 'No',
-						selected: ($[field.field] === 'No')
-					}, 'No')
-				])
-			}else if(field.type == 'readonly'){
-				return m('span', $[field.field])
-			}else{
-				return m('input', {
-					type: field.type,
-					name: field.field,
-					onchange: updateData,
-					value: ($[field.field] || '')
-				})
 			}
 		}
 
